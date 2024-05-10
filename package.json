@@ -15,7 +15,8 @@
     "cypress": "cypress open",
     "analyze": "ANALYZE=true next build",
     "test-e2e": "playwright test e2e",
-    "fix:prettier": "prettier --write . '!.next' '!.node_modules' '!tools/output/**/.next'"
+    "fix:prettier": "prettier --write . '!.next' '!.node_modules' '!tools/output/**/.next'",
+    "vercel-build": "medusa develop && next build"
   },
   "resolutions": {
     "webpack": "^5",
