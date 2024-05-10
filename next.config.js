@@ -32,6 +32,11 @@ const nextConfig = withStoreConfig({
         hostname: "192.168.0.104:8000",
         
       },
+      {
+        protocol: "https",
+        hostname: "https://backend-stock-pjg4.onrender.com",
+        
+      },
     ],
   },
 })

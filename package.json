@@ -6,15 +6,16 @@
   "description": "Next.js Starter to be used with Medusa server",
   "keywords": [
     "medusa-storefront"
-  ],
+  ], 
   "scripts": {
-    "dev": "next dev -p 8000",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 8000",
+    "start": "next start",
     "lint": "next lint",
     "cypress": "cypress open",
     "analyze": "ANALYZE=true next build",
-    "test-e2e": "playwright test e2e"
+    "test-e2e": "playwright test e2e",
+    "fix:prettier": "prettier --write . '!.next' '!.node_modules' '!tools/output/**/.next'"
   },
   "resolutions": {
     "webpack": "^5",
