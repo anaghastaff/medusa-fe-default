@@ -8,7 +8,7 @@ import { CartWithCheckoutStep } from "types/global"
 import DiscountCode from "@modules/checkout/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
-type SummaryProps = {
+type SummaryProps = { 
   cart: CartWithCheckoutStep
 }
 

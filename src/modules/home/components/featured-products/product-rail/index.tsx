@@ -33,7 +33,7 @@ export default function ProductRail({
               <ProductPreview
                 productPreview={product}
                 region={region}
-                isFeatured
+                isFeatured 
               />
             </li>
           ))}

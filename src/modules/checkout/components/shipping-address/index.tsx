@@ -84,6 +84,8 @@ const ShippingAddress = ({
           <AddressSelect addresses={customer.shipping_addresses} cart={cart} />
         </Container>
       )}
+
+      
       <div className="grid grid-cols-2 gap-4">
         <Input
           label="First name"

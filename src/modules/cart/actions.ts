@@ -36,7 +36,7 @@ export async function getOrSetCart(countryCode: string) {
   if (!region) {
     return null
   }
-
+ 
   const region_id = region.id
 
   if (!cart) {
@@ -50,7 +50,7 @@ export async function getOrSetCart(countryCode: string) {
       })
     revalidateTag("cart")
   }
-
+ 
   if (cart && cart?.region_id !== region_id) {
     await updateCart(cart.id, { region_id })
     revalidateTag("cart")
@@ -95,7 +95,7 @@ export async function addToCart({
   }
 
   try {
-    await addItem({ cartId: cart.id, variantId, quantity })
+    await addItem({ cartId: cart.id, variantId, quantity }) 
     revalidateTag("cart")
   } catch (e) {
     return "Error adding item to cart"

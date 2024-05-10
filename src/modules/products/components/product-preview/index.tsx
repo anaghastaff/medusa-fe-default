@@ -34,7 +34,7 @@ export default async function ProductPreview({
 
   return (
     <LocalizedClientLink
-      href={`/products/${productPreview.handle}`}
+      href={`/products/${productPreview.handle}`} 
       className="group"
     >
       <div data-testid="product-wrapper">

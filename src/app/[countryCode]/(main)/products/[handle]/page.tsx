@@ -92,6 +92,7 @@ export default async function ProductPage({ params }: Props) {
 
   const pricedProduct = await getPricedProductByHandle(params.handle, region)
 
+ 
   if (!pricedProduct) {
     notFound()
   }
@@ -103,4 +104,4 @@ export default async function ProductPage({ params }: Props) {
       countryCode={params.countryCode}
     />
   )
-}
+} 

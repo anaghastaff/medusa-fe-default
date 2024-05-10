@@ -7,7 +7,9 @@ const store = require("./store.config.json")
 const nextConfig = withStoreConfig({
   features: store.features,
   reactStrictMode: true,
+  
   images: {
+    
     remotePatterns: [
       {
         protocol: "http",
@@ -24,6 +26,11 @@ const nextConfig = withStoreConfig({
       {
         protocol: "https",
         hostname: "medusa-server-testing.s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "http",
+        hostname: "192.168.0.104:8000",
+        
       },
     ],
   },

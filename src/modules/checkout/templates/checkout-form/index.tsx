@@ -16,7 +16,7 @@ export default async function CheckoutForm() {
 
   if (!cartId) {
     return null
-  }
+  } 
 
   // create payment sessions and get cart
   const cart = (await createPaymentSessions(cartId).then(
@@ -30,7 +30,7 @@ export default async function CheckoutForm() {
   cart.checkout_step = cart && getCheckoutStep(cart)
 
   // get available shipping methods
-  const availableShippingMethods = await listShippingMethods(
+  const availableShippingMethods = await listShippingMethods( 
     cart.region_id
   ).then((methods) => methods?.filter((m) => !m.is_return))
 

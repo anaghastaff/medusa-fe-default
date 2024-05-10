@@ -25,7 +25,7 @@ const CartTemplate = ({
                   <Divider />
                 </>
               )}
-              <ItemsTemplate region={cart?.region} items={cart?.items} />
+              <ItemsTemplate region={cart?.region} items={cart?.items} /> 
             </div>
             <div className="relative">
               <div className="flex flex-col gap-y-8 sticky top-12">
@@ -33,7 +33,7 @@ const CartTemplate = ({
                   <>
                     <div className="bg-white py-6">
                       <Summary cart={cart} />
-                    </div>
+                    </div> 
                   </>
                 )}
               </div>

@@ -97,7 +97,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
               <Heading className="txt-medium">Discount applied:</Heading>
               <div className="flex items-center justify-between w-full max-w-full">
                 <Text className="flex gap-x-1 items-baseline txt-small-plus w-4/5 pr-1">
-                  <span>Code:</span>
+                  <span>Code: </span>
                   <span className="truncate">{discounts[0].code}</span>
                   <span className="min-w-fit">({appliedDiscount})</span>
                 </Text>

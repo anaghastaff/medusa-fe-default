@@ -26,13 +26,14 @@ async function getRegionMap() {
     }).then((res) => res.json())
 
     if (!regions) {
-      notFound()
+      notFound() 
     }
 
     // Create a map of country codes to regions.
     regions.forEach((region: Region) => {
       region.countries.forEach((c) => {
         regionMapCache.regionMap.set(c.iso_2, region)
+        
       })
     })
 
@@ -92,12 +93,12 @@ export async function middleware(request: NextRequest) {
   const cartIdCookie = request.cookies.get("_medusa_cart_id")
 
   const regionMap = await getRegionMap()
-
+  
   const countryCode = regionMap && (await getCountryCode(request, regionMap))
-
+  
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
-
+    
   // check if one of the country codes is in the url
   if (
     urlHasCountryCode &&
@@ -138,5 +139,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)"],
 }

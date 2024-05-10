@@ -2,6 +2,7 @@ import { Metadata } from "next"
 
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import StoreTemplate from "@modules/store/templates"
+import { pages } from "next/dist/build/templates/app-page"
 
 export const metadata: Metadata = {
   title: "Store",
@@ -20,7 +21,7 @@ type Params = {
 
 export default async function StorePage({ searchParams, params }: Params) {
   const { sortBy, page } = searchParams
-
+console.log("store params", params.countryCode, sortBy, page)
   return (
     <StoreTemplate
       sortBy={sortBy}

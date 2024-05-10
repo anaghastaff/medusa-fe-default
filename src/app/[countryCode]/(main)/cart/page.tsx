@@ -38,7 +38,7 @@ const fetchCart = async () => {
 
   return cart
 }
-
+ 
 export default async function Cart() {
   const cart = await fetchCart()
   const customer = await getCustomer()

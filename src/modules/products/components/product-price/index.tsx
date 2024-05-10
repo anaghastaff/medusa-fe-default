@@ -16,6 +16,8 @@ export default function ProductPrice({
   variant?: PricedVariant
   region: RegionInfo
 }) {
+  
+ 
   const { cheapestPrice, variantPrice } = getProductPrice({
     product,
     variantId: variant?.id,
@@ -38,7 +40,7 @@ export default function ProductPrice({
         {!variant && "From "}
         {selectedPrice.calculated_price}
       </span>
-      {selectedPrice.price_type === "sale" && (
+      {selectedPrice.price_type === "sale" && ( 
         <>
           <p>
             <span className="text-ui-fg-subtle">Original: </span>

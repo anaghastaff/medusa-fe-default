@@ -68,7 +68,7 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
         <Table.Cell>
           <div className="flex gap-2 items-center w-28">
             <DeleteButton id={item.id} data-testid="product-delete-button" />
-            <CartItemSelect
+            {/* <CartItemSelect
               value={item.quantity}
               onChange={(value) => changeQuantity(parseInt(value.target.value))}
               className="w-14 h-10 p-4"
@@ -89,7 +89,31 @@ const Item = ({ item, region, type = "full" }: ItemProps) => {
                   </option>
                 )
               )}
-            </CartItemSelect>
+            </CartItemSelect> */}
+
+<button
+    onClick={() => changeQuantity(item.quantity - 1)}
+    disabled={item.quantity <= 1 || updating}
+    className="w-8 h-8 flex items-center justify-center text-sm text-ui-fg-muted hover:bg-ui-bg-muted transition-colors"
+  >
+    -
+  </button>
+  <input
+  type="text"
+  value={item.quantity}
+  onChange={(e) => changeQuantity(parseInt(e.target.value))}
+  min={1}
+  disabled={updating}
+  className="w-14 h-10 p-4 border border-ui-border rounded-lg text-center"
+  data-testid="product-quantity-input"
+/>
+  <button
+    onClick={() => changeQuantity(item.quantity + 1)}
+    disabled={item.variant.inventory_quantity > 0 && item.quantity >= item.variant.inventory_quantity || updating}
+    className="w-8 h-8 flex items-center justify-center text-sm text-ui-fg-muted hover:bg-ui-bg-muted transition-colors"
+  >
+    +
+  </button>
             {updating && <Spinner />}
           </div>
           <ErrorMessage error={error} data-testid="product-error-message" />

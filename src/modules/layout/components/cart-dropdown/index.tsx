@@ -138,7 +138,7 @@ const CartDropdown = ({
                               </div>
                               <div className="flex justify-end">
                                 <LineItemPrice
-                                  region={cartState.region}
+                                  region={cartState.region} 
                                   item={item}
                                   style="tight"
                                 />

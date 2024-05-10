@@ -27,6 +27,8 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
     return notFound()
   }
 
+ 
+
   return (
     <>
       <div className="content-container flex flex-col small:flex-row small:items-start py-6 relative" data-testid="product-container">

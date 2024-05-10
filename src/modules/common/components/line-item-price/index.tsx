@@ -36,7 +36,7 @@ const LineItemPrice = ({
                   includeTaxes: false,
                 })}
               </span>
-            </p>
+            </p> 
             {style === "default" && (
               <span className="text-ui-fg-interactive">
                 -{getPercentageDiff(originalPrice, item.total || 0)}%

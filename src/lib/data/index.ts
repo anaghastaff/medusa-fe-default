@@ -11,7 +11,7 @@ import {
   StorePostCustomersReq,
 } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
-import { cache } from "react"
+import { cache } from "react" 
 
 import sortProducts from "@lib/util/sort-products"
 import transformProductPreview from "@lib/util/transform-product-preview"
@@ -449,7 +449,6 @@ export const getProductByHandle = cache(async function (
     .catch((err) => {
       throw err
     })
-
   return { product }
 })
 
@@ -692,7 +691,7 @@ export const getCategoriesList = cache(async function (
       throw err
     })
 
-  return {
+  return { 
     product_categories,
     count,
   }

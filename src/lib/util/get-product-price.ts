@@ -32,6 +32,7 @@ export function getProductPrice({
     const variants = product.variants as unknown as CalculatedVariant[]
 
     const cheapestVariant = variants.reduce((prev, curr) => {
+      
       return prev.calculated_price < curr.calculated_price ? prev : curr
     })
 
