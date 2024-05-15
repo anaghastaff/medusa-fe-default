@@ -1,6 +1,6 @@
 "use client"
 
-import { Stripe, StripeElementsOptions } from "@stripe/stripe-js"
+import { Stripe, StripeElementsOptions, type Appearance } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 
 import { PaymentSession } from "@medusajs/medusa"
@@ -18,8 +18,13 @@ const StripeWrapper: React.FC<StripeWrapperProps> = ({
     stripePromise,
     children,
   }) => {
+
+    const appearance: Appearance = {
+      theme: 'stripe',
+  };
     const options: StripeElementsOptions = {
       clientSecret: paymentSession!.data?.client_secret as string | undefined,
+      appearance
     }
   
     if (!stripeKey) {

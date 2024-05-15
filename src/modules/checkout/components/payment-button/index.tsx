@@ -4,18 +4,26 @@ import { Cart, PaymentSession } from "@medusajs/medusa"
 import { Button } from "@medusajs/ui"
 import { OnApproveActions, OnApproveData } from "@paypal/paypal-js"
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js"
-import { useElements, useStripe } from "@stripe/react-stripe-js"
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { placeOrder } from "@modules/checkout/actions"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import ErrorMessage from "../error-message"
 import Spinner from "@modules/common/icons/spinner"
+import Stripe from "stripe"
+import type {
+  StripeError,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js"
 
 type PaymentButtonProps = {
-  cart: Omit<Cart, "refundable_amount" | "refunded_total">,
-  'data-testid': string
+  cart: Omit<Cart, "refundable_amount" | "refunded_total">
+  "data-testid": string
 }
 
-const PaymentButton: React.FC<PaymentButtonProps> = ({ cart, 'data-testid': dataTestId }) => {
+const PaymentButton: React.FC<PaymentButtonProps> = ({
+  cart,
+  "data-testid": dataTestId,
+}) => {
   const notReady =
     !cart ||
     !cart.shipping_address ||
@@ -26,14 +34,28 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ cart, 'data-testid': data
       : false
 
   const paymentSession = cart.payment_session as PaymentSession
-
+        
   switch (paymentSession.provider_id) {
     case "stripe":
-      return <StripePaymentButton notReady={notReady} cart={cart} data-testid={dataTestId} />
+      return (
+        <StripePaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}
+        />
+      )
     case "manual":
-      return <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+      return (
+        <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+      )
     case "paypal":
-      return <PayPalPaymentButton notReady={notReady} cart={cart} data-testid={dataTestId} />
+      return (
+        <PayPalPaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}
+        />
+      )
     default:
       return <Button disabled>Select a payment method</Button>
   }
@@ -42,14 +64,15 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({ cart, 'data-testid': data
 const StripePaymentButton = ({
   cart,
   notReady,
-  'data-testid': dataTestId
+  "data-testid": dataTestId,
 }: {
   cart: Omit<Cart, "refundable_amount" | "refunded_total">
   notReady: boolean
-  'data-testid'?: string
+  "data-testid"?: string
 }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [cardComplete, setCardComplete] = useState(false)
 
   const onPaymentCompleted = async () => {
     await placeOrder().catch(() => {
@@ -62,78 +85,170 @@ const StripePaymentButton = ({
   const elements = useElements()
   const card = elements?.getElement("card")
 
-  const session = cart.payment_session as PaymentSession
-
+  
+ 
   const disabled = !stripe || !elements ? true : false
 
-  const handlePayment = async () => {
-    setSubmitting(true)
+  // const handlePayment = async () => {
 
-    if (!stripe || !elements || !card || !cart) {
+  //   setSubmitting(true)
+
+  //   if (!stripe || !elements || !card || !cart) {
+  //     setSubmitting(false)
+  //     return
+  //   }
+
+  //   await stripe
+  //     .confirmCardPayment(session.data.client_secret as string, {
+  //       payment_method: {
+  //         card: card,
+  //         billing_details: {
+  //           name:
+  //             cart.billing_address.first_name +
+  //             " " +
+  //             cart.billing_address.last_name,
+  //           address: {
+  //             city: cart.billing_address.city ?? undefined,
+  //             country: cart.billing_address.country_code ?? undefined,
+  //             line1: cart.billing_address.address_1 ?? undefined,
+  //             line2: cart.billing_address.address_2 ?? undefined,
+  //             postal_code: cart.billing_address.postal_code ?? undefined,
+  //             state: cart.billing_address.province ?? undefined,
+  //           },
+  //           email: cart.email,
+  //           phone: cart.billing_address.phone ?? undefined,
+  //         },
+  //       },
+  //     })
+  //     .then(({ error, paymentIntent }) => {
+  //       if (error) {
+  //         const pi = error.payment_intent
+
+  //         if (
+  //           (pi && pi.status === "requires_capture") ||
+  //           (pi && pi.status === "succeeded")
+  //         ) {
+  //           onPaymentCompleted()
+  //         }
+
+  //         setErrorMessage(error.message || null) 
+  //         return
+  //       }
+
+  //       if (
+  //         (paymentIntent && paymentIntent.status === "requires_capture") ||
+  //         paymentIntent.status === "succeeded"
+  //       ) {
+  //         return onPaymentCompleted()
+  //       }
+
+  //       return
+  //     })
+  // }
+
+  const handleError = (submitError: StripeError) => {
+    setErrorMessage(submitError.message || null)
+  }
+
+  
+  const session = cart?.payment_session as PaymentSession
+  
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+
+    console.log("session.data.client_secret", session.data.client_secret)
+    const pi = session?.data.id;
+    if (!stripe || !elements || !cart) {
       setSubmitting(false)
       return
     }
 
-    await stripe
-      .confirmCardPayment(session.data.client_secret as string, {
-        payment_method: {
-          card: card,
-          billing_details: {
-            name:
-              cart.billing_address.first_name +
-              " " +
-              cart.billing_address.last_name,
-            address: {
-              city: cart.billing_address.city ?? undefined,
-              country: cart.billing_address.country_code ?? undefined,
-              line1: cart.billing_address.address_1 ?? undefined,
-              line2: cart.billing_address.address_2 ?? undefined,
-              postal_code: cart.billing_address.postal_code ?? undefined,
-              state: cart.billing_address.province ?? undefined,
-            },
-            email: cart.email,
-            phone: cart.billing_address.phone ?? undefined,
-          },
-        },
-      })
-      .then(({ error, paymentIntent }) => {
-        if (error) {
-          const pi = error.payment_intent
+    setSubmitting(true)
 
-          if (
-            (pi && pi.status === "requires_capture") ||
-            (pi && pi.status === "succeeded")
-          ) {
-            onPaymentCompleted()
-          }
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit()
+    if (submitError) {
+      handleError(submitError)
+      return
+    }
 
-          setErrorMessage(error.message || null)
-          return
-        }
+    // Create the PaymentIntent and obtain clientSecret
+    const res = await fetch("/api/payments/stripe", {
+      method: "POST",
 
-        if (
-          (paymentIntent && paymentIntent.status === "requires_capture") ||
-          paymentIntent.status === "succeeded"
-        ) {
-          return onPaymentCompleted()
-        }
+      headers: { "Content-Type": "application/json" },
+      cache: "no-cache",
+      body: JSON.stringify(pi),
+    })
 
-        return
-      })
+    const { client_secret: clientSecret } = await res.json()
+    console.log("elements", clientSecret)
+    // Use the clientSecret and Elements instance to confirm the setup
+    const { error, paymentIntent } = await stripe.confirmPayment({
+      elements,
+      clientSecret,
+      confirmParams: {
+        return_url: "",
+      },
+      // Uncomment below if you only want redirect for redirect-based payments
+      redirect: "if_required",
+    })
+
+    if (error) {
+      const pi = error.payment_intent
+      console.log("error log", pi)
+      if (
+        (pi && pi.status === "requires_capture") ||
+        (pi && pi.status === "succeeded")
+      ) {
+        onPaymentCompleted()
+      }
+
+      setErrorMessage(error.message || null)
+      return
+    }
+
+    if (
+      (paymentIntent && paymentIntent.status === "requires_capture") ||
+      paymentIntent.status === "succeeded"
+    ) {
+      return onPaymentCompleted()
+    }
+
+    if (error) {
+      handleError(error)
+    }
+  }
+
+  const options = {
+    layout: "tabs" as "tabs"
   }
 
   return (
     <>
-      <Button
-        disabled={disabled || notReady}
-        onClick={handlePayment}
-        size="large"
-        isLoading={submitting}
-        data-testid={dataTestId}
-      >
-        Place order
-      </Button>
-      <ErrorMessage error={errorMessage} data-testid="stripe-payment-error-message" />
+     
+        <div className="flex flex-col gap-x-1 gap-y-4 max-w-md bg-blue-300">
+          <PaymentElement
+            options={options}
+            onChange={(e) => setCardComplete(e.complete)}
+          />
+
+          <Button
+            disabled={disabled || notReady || !cardComplete}
+            onSubmit={handleSubmit}
+            size="large"
+            isLoading={submitting}
+            data-testid={dataTestId}
+            className="gap-y-4"
+          >
+            Place order
+          </Button>
+        </div>
+      
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="stripe-payment-error-message"
+      />
     </>
   )
 }
@@ -141,11 +256,11 @@ const StripePaymentButton = ({
 const PayPalPaymentButton = ({
   cart,
   notReady,
-  'data-testid': dataTestId
+  "data-testid": dataTestId,
 }: {
   cart: Omit<Cart, "refundable_amount" | "refunded_total">
   notReady: boolean
-  'data-testid'?: string
+  "data-testid"?: string
 }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -194,7 +309,10 @@ const PayPalPaymentButton = ({
           disabled={notReady || submitting || isPending}
           data-testid={dataTestId}
         />
-        <ErrorMessage error={errorMessage} data-testid="paypal-payment-error-message" />
+        <ErrorMessage
+          error={errorMessage}
+          data-testid="paypal-payment-error-message"
+        />
       </>
     )
   }
@@ -228,7 +346,10 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
       >
         Place order
       </Button>
-      <ErrorMessage error={errorMessage} data-testid="manual-payment-error-message" />
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="manual-payment-error-message"
+      />
     </>
   )
 }

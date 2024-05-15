@@ -14,8 +14,8 @@ type WrapperProps = {
 
 export const StripeContext = createContext(false)
 
-const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY
-const stripePromise = stripeKey ? loadStripe(stripeKey) : null
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_KEY 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 const paypalClientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID
 
@@ -29,8 +29,8 @@ const Wrapper: React.FC<WrapperProps> = ({ cart, children }) => {
       <StripeContext.Provider value={true}>
         <StripeWrapper
           paymentSession={paymentSession}
-          stripeKey={stripeKey}
-          stripePromise={stripePromise}
+          stripeKey={stripeKey} 
+          stripePromise={stripePromise} 
         >
           {children}
         </StripeWrapper>

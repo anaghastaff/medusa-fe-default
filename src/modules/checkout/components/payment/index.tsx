@@ -7,7 +7,7 @@ import ErrorMessage from "@modules/checkout/components/error-message"
 import { Cart } from "@medusajs/medusa"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, Tooltip, clx } from "@medusajs/ui"
-import { CardElement } from "@stripe/react-stripe-js"
+import { CardElement, PaymentElement } from "@stripe/react-stripe-js"
 import { StripeCardElementOptions } from "@stripe/stripe-js"
 
 import Divider from "@modules/common/components/divider"
@@ -16,6 +16,7 @@ import PaymentContainer from "@modules/checkout/components/payment-container"
 import { setPaymentMethod } from "@modules/checkout/actions"
 import { paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
+import type { StripePaymentElementOptions } from "@stripe/stripe-js"
 
 const Payment = ({
   cart,
@@ -26,7 +27,7 @@ const Payment = ({
   const [error, setError] = useState<string | null>(null)
   const [cardBrand, setCardBrand] = useState<string | null>(null)
   const [cardComplete, setCardComplete] = useState(false)
-
+  const [paymentSelected, setPaymentSelected] = useState(false)
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
@@ -39,22 +40,6 @@ const Payment = ({
   const paymentReady =
     cart?.payment_session && cart?.shipping_methods.length !== 0
 
-  const useOptions: StripeCardElementOptions = useMemo(() => {
-    return {
-      style: {
-        base: {
-          fontFamily: "Inter, sans-serif",
-          color: "#424270",
-          "::placeholder": {
-            color: "rgb(107 114 128)",
-          },
-        },
-      },
-      classes: {
-        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-ui-bg-field border rounded-md appearance-none focus:outline-none focus:ring-0 focus:shadow-borders-interactive-with-active border-ui-border-base hover:bg-ui-bg-field-hover transition-all duration-300 ease-in-out",
-      },
-    }
-  }, [])
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -78,7 +63,10 @@ const Payment = ({
 
   const handleChange = (providerId: string) => {
     setError(null)
+    setPaymentSelected(true)
     set(providerId)
+
+    
   }
 
   const handleEdit = () => {
@@ -99,6 +87,9 @@ const Payment = ({
     setError(null)
   }, [isOpen])
 
+  const options = {
+    layout: "tabs" as "tabs"
+  }
   return (
     <div className="bg-white">
       <div className="flex flex-row items-center justify-between mb-6">
@@ -112,7 +103,7 @@ const Payment = ({
             }
           )}
         >
-          Payment
+          Payment Type
           {!isOpen && paymentReady && <CheckCircleSolid />}
         </Heading>
         {!isOpen && paymentReady && (
@@ -141,6 +132,7 @@ const Payment = ({
                 .map((paymentSession) => {
                   return (
                     <PaymentContainer
+                    
                       paymentInfoMap={paymentInfoMap}
                       paymentSession={paymentSession}
                       key={paymentSession.id}
@@ -152,25 +144,23 @@ const Payment = ({
                 })}
             </RadioGroup>
 
-            {isStripe && stripeReady && (
+            {/* {isStripe && stripeReady && (
               <div className="mt-5 transition-all duration-150 ease-in-out">
                 <Text className="txt-medium-plus text-ui-fg-base mb-1">
                   Enter your card details:
                 </Text>
-
-                <CardElement
-                  options={useOptions as StripeCardElementOptions}
-                  onChange={(e) => {
-                    setCardBrand(
-                      e.brand &&
-                        e.brand.charAt(0).toUpperCase() + e.brand.slice(1)
-                    )
-                    setError(e.error?.message || null)
+                
+                <PaymentElement
+                  options={options}
+                  onChange={(e)=>
+                    
                     setCardComplete(e.complete)
-                  }}
+                  }
+                  
                 />
+               
               </div>
-            )}
+            )} */}
 
             <ErrorMessage error={error} data-testid="payment-method-error-message" />
 
@@ -179,10 +169,10 @@ const Payment = ({
               className="mt-6"
               onClick={handleSubmit}
               isLoading={isLoading}
-              disabled={(isStripe && !cardComplete) || !cart.payment_session}
+              disabled={(isStripe && !stripeReady && !paymentSelected) || !cart.payment_session}
               data-testid="submit-payment-button"
             >
-              Continue to review
+              Review and Pay
             </Button>
           </div>
         ) : (
@@ -196,7 +186,7 @@ const Payment = ({
             <div className="flex items-start gap-x-1 w-full">
               <div className="flex flex-col w-1/3">
                 <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Payment method
+                  Payment method type
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle" data-testid="payment-method-summary">
                   {paymentInfoMap[cart.payment_session.provider_id]?.title ||
@@ -223,9 +213,11 @@ const Payment = ({
                   <Text>
                     {cart.payment_session.provider_id === "stripe" && cardBrand
                       ? cardBrand
-                      : "Another step will appear"}
+                      : cart.payment_session.provider_id}
                   </Text>
+
                 </div>
+                
               </div>
             </div>
           )}

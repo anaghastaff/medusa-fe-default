@@ -3,7 +3,7 @@ import { notFound } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
-const DEFAULT_REGION =  "us"
+const DEFAULT_REGION = "us"
 
 const regionMapCache = {
   regionMap: new Map<string, Region>(),
@@ -26,14 +26,13 @@ async function getRegionMap() {
     }).then((res) => res.json())
 
     if (!regions) {
-      notFound() 
+      notFound()
     }
 
     // Create a map of country codes to regions.
     regions.forEach((region: Region) => {
       region.countries.forEach((c) => {
         regionMapCache.regionMap.set(c.iso_2, region)
-        
       })
     })
 
@@ -93,12 +92,12 @@ export async function middleware(request: NextRequest) {
   const cartIdCookie = request.cookies.get("_medusa_cart_id")
 
   const regionMap = await getRegionMap()
-  
+
   const countryCode = regionMap && (await getCountryCode(request, regionMap))
-  
+
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
-    
+
   // check if one of the country codes is in the url
   if (
     urlHasCountryCode &&
@@ -109,11 +108,15 @@ export async function middleware(request: NextRequest) {
   }
 
   const redirectPath =
-    request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname
+    request.nextUrl.pathname === "/" ? "/" : request.nextUrl.pathname
 
   const queryString = request.nextUrl.search ? request.nextUrl.search : ""
+  console.log("queryString", queryString)
+  console.log("redirectPath", redirectPath)
 
   let redirectUrl = request.nextUrl.href
+
+  console.log("redirectUrl", redirectUrl)
 
   let response = NextResponse.redirect(redirectUrl, 307)
 
@@ -122,13 +125,14 @@ export async function middleware(request: NextRequest) {
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
   }
-
+  console.log("redirectUrl", redirectUrl)
   // If a cart_id is in the params, we set it as a cookie and redirect to the address step.
   if (cartId && !checkoutStep) {
     redirectUrl = `${redirectUrl}&step=address`
     response = NextResponse.redirect(`${redirectUrl}`, 307)
     response.cookies.set("_medusa_cart_id", cartId, { maxAge: 60 * 60 * 24 })
   }
+  console.log("redirectUrl", redirectUrl)
 
   // Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
   if (isOnboarding) {
@@ -139,5 +143,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)"],
+  matcher: [
+    "/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)",
+  ],
 }
