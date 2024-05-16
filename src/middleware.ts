@@ -1,6 +1,7 @@
 import { Region } from "@medusajs/medusa"
 import { notFound } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
+import { cache } from "react"
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
 const DEFAULT_REGION = "us"
@@ -93,7 +94,7 @@ export async function middleware(request: NextRequest) {
 
   const regionMap = await getRegionMap()
 
-  const countryCode = regionMap && (await getCountryCode(request, regionMap))
+  const countryCode = regionMap && cache(await getCountryCode(request, regionMap))
 
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
@@ -108,7 +109,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const redirectPath =
-    request.nextUrl.pathname === "/" ? "/" : request.nextUrl.pathname
+    request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname
 
   const queryString = request.nextUrl.search ? request.nextUrl.search : ""
   console.log("queryString", queryString)
