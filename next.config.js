@@ -7,6 +7,13 @@ const store = require("./store.config.json")
 const nextConfig = withStoreConfig({
   features: store.features,
   reactStrictMode: true,
+
+  // experimental: {
+  //   middlewareSourceMaps: true,
+  //   middleware: {
+  //     timeout: 60000, // Increase the timeout to 60 seconds (adjust as needed)
+  //   },
+  // },
   
   images: {
     
