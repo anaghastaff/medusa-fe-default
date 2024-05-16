@@ -101,9 +101,7 @@ export async function middleware(request: NextRequest) {
 
   // check if one of the country codes is in the url
   if (
-    urlHasCountryCode &&
-    (!isOnboarding || onboardingCookie) &&
-    (!cartId || cartIdCookie)
+    urlHasCountryCode
   ) {
     return NextResponse.next()
   }
@@ -136,9 +134,9 @@ export async function middleware(request: NextRequest) {
   console.log("redirectUrl", redirectUrl)
 
   // Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
-  if (isOnboarding) {
-    response.cookies.set("_medusa_onboarding", "true", { maxAge: 60 * 60 * 24 })
-  }
+  // if (isOnboarding) {
+  //   response.cookies.set("_medusa_onboarding", "true", { maxAge: 60 * 60 * 24 })
+  // }
 
   return response
 }
