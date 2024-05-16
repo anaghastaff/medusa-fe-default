@@ -65,8 +65,6 @@ const Payment = ({
     setError(null)
     setPaymentSelected(true)
     set(providerId)
-
-    
   }
 
   const handleEdit = () => {
@@ -122,7 +120,7 @@ const Payment = ({
         {cart?.payment_sessions?.length ? (
           <div className={isOpen ? "block" : "hidden"}>
             <RadioGroup
-              value={cart.payment_session?.provider_id || ""}
+              value={cart?.payment_session?.provider_id || ""}
               onChange={(value: string) => handleChange(value)}
             >
               {cart.payment_sessions
@@ -132,7 +130,6 @@ const Payment = ({
                 .map((paymentSession) => {
                   return (
                     <PaymentContainer
-                    
                       paymentInfoMap={paymentInfoMap}
                       paymentSession={paymentSession}
                       key={paymentSession.id}
