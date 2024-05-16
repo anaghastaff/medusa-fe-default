@@ -177,6 +177,7 @@ export async function setPaymentMethod(providerId: string) {
 
   try {
     const cart = await setPaymentSession({ cartId, providerId })
+    
     revalidateTag("cart")
     return cart
   } catch (error: any) {

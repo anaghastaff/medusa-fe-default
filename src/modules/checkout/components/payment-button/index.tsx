@@ -155,9 +155,9 @@ const StripePaymentButton = ({
   
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-
-    console.log("session.data.client_secret", session.data.client_secret)
-    const pi = session?.data.id;
+    const pi = session?.data?.id;
+    console.log("PI IN DATA ID",pi)
+   
     if (!stripe || !elements || !cart) {
       setSubmitting(false)
       return
@@ -178,7 +178,7 @@ const StripePaymentButton = ({
 
       headers: { "Content-Type": "application/json" },
       cache: "no-cache",
-      body: JSON.stringify(pi),
+      body: JSON.stringify({session}),
     })
 
     const { client_secret: clientSecret } = await res.json()
@@ -227,7 +227,8 @@ const StripePaymentButton = ({
   return (
     <>
      
-        <div className="flex flex-col gap-x-1 gap-y-4 max-w-md bg-blue-300">
+        <div className="flex flex-col gap-x-1 gap-y-4 max-w-md bg-blue-300 p-4" >
+          <form id="payment-form" onSubmit={handleSubmit} className="flex flex-col gap-y-4">
           <PaymentElement
             options={options}
             onChange={(e) => setCardComplete(e.complete)}
@@ -235,7 +236,7 @@ const StripePaymentButton = ({
 
           <Button
             disabled={disabled || notReady || !cardComplete}
-            onSubmit={handleSubmit}
+            type="submit"
             size="large"
             isLoading={submitting}
             data-testid={dataTestId}
@@ -243,6 +244,7 @@ const StripePaymentButton = ({
           >
             Place order
           </Button>
+          </form>
         </div>
       
       <ErrorMessage

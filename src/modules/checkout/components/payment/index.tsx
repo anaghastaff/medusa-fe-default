@@ -63,8 +63,9 @@ const Payment = ({
 
   const handleChange = (providerId: string) => {
     setError(null)
-    setPaymentSelected(true)
+   
     set(providerId)
+    setPaymentSelected(true)
   }
 
   const handleEdit = () => {
