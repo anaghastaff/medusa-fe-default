@@ -94,8 +94,8 @@ export async function middleware(request: NextRequest) {
 
   const regionMap = await getRegionMap()
 
-  const countryCode = regionMap && (await getCountryCode(request, regionMap))
-
+  // const countryCode = regionMap && (await getCountryCode(request, regionMap))
+  const countryCode = "us";
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
 
@@ -144,7 +144,9 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)",
-  ],
+  // matcher: [
+  //   "/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)",
+  // ],
+
+  matcher: ["/((?!api|_next/static|favicon.ico).*)"],
 }
