@@ -115,12 +115,13 @@ const StripePaymentButton = ({
     }
 
     // Create the PaymentIntent and obtain clientSecret
-    const res = await fetch("/api/payments/stripe", {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL
+    const res = await fetch(`/api/payments/stripe`, {
+      credentials:'include',
       method: "POST",
-
       headers: { "Content-Type": "application/json" },
       cache: "no-cache",
-      body: JSON.stringify({session}),
+      body: JSON.stringify({session})
     })
 
     const { client_secret: clientSecret } = await res.json()

@@ -146,5 +146,5 @@ export const config = {
   //   "/((?!api|_next/static|favicon.ico|_next/assets|_next/image|_next/public|assets).*)",
   // ],
 
-  matcher: ["/((?!api|_next/static|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|favicon.ico|_next/public|assets).*)"],
 }

@@ -46,7 +46,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
               {paymentInfoMap[paymentSession.provider_id]?.title ||
                 paymentSession.provider_id}
             </Text>
-            {process.env.NODE_ENV === "development" &&
+            {/* {process.env.NODE_ENV === "development" &&
               !Object.hasOwn(paymentInfoMap, paymentSession.provider_id) && (
                 <Tooltip
                   content="You can add a user-friendly name and icon for this payment provider in 'src/modules/checkout/components/payment/index.tsx'"
@@ -54,11 +54,11 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
                 >
                   <InformationCircleSolid color="var(--fg-muted)" />
                 </Tooltip>
-              )}
+              )} */}
 
-            {paymentSession.provider_id === "manual" && isDevelopment && (
+            {/* {paymentSession.provider_id === "manual" && isDevelopment && (
               <PaymentTest className="hidden small:block" />
-            )}
+            )} */}
           </div>
           <span className="justify-self-end text-ui-fg-base">
             {paymentInfoMap[paymentSession.provider_id]?.icon}

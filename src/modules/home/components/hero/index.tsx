@@ -30,13 +30,7 @@ const Hero = () => {
             <Github />
           </Button>
         </a>
-        <div style={{position:"relative", background:'#3399cc'}}>
-          <Image alt="static asset" src = "/assets/logo2.svg" width={150} height={100} style={{objectFit:"contain"}}/>
-        </div>
-        <div>logo Below</div>
-        <div style={{position:"relative"}}>
-          <Image alt="static asset" src = {logo2} width={150} height={100} style={{objectFit:"contain"}}/>
-        </div>
+     
       </div>
     </div>
   )

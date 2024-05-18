@@ -697,7 +697,7 @@
     winston "^3.8.2"
     yargs "^15.3.1"
 
-"@medusajs/medusa-js@*", "@medusajs/medusa-js@^6.1.7":
+"@medusajs/medusa-js@*", "@medusajs/medusa-js@^6.1.8":
   version "6.1.8"
   resolved "https://registry.npmjs.org/@medusajs/medusa-js/-/medusa-js-6.1.8.tgz"
   integrity sha512-2i480Uslh7Y2qJW5OSrzXKR2NKjmYRAcWbcuKGBawmpMkveTVesuP/VmYCYNuBB/V3HKq/KEa9Q868lc1F+FKQ==
@@ -1114,7 +1114,7 @@
   dependencies:
     promise-polyfill "^8.3.0"
 
-"@paypal/react-paypal-js@^7.8.1":
+"@paypal/react-paypal-js@^7.8.3":
   version "7.8.3"
   resolved "https://registry.npmjs.org/@paypal/react-paypal-js/-/react-paypal-js-7.8.3.tgz"
   integrity sha512-7sD5JFA0IH9kysyGFv5DTmtPn54vLWZ0DLhdjUvsjqZnoEs11mJJJlTsTA7MkIO3jBAJOWlfoA4wLYzmy68C4g==

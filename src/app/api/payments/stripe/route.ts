@@ -13,6 +13,7 @@ const POST = async (req:NextRequest, res:NextResponse) => {
     const cart = await fetchCart();
     const {session} = await req.json();
     console.log("pi in route.ts", session?.data?.id)
+    
   // Create a PaymentIntent with the order amount and currency
   
     if(!cart){
