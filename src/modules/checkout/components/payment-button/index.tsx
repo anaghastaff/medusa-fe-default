@@ -124,8 +124,9 @@ const StripePaymentButton = ({
       body: JSON.stringify({session})
     })
 
-    const { client_secret: clientSecret } = await res.json()
-    console.log("elements", clientSecret)
+    // const { client_secret: clientSecret } = await res.json()
+    const {clientSecret} = await res.json();
+    console.log("clientsecret", clientSecret)
     // Use the clientSecret and Elements instance to confirm the setup
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,

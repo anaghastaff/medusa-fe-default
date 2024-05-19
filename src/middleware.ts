@@ -95,10 +95,11 @@ export async function middleware(request: NextRequest) {
   const regionMap = await getRegionMap()
 
    const countryCode = regionMap && (await getCountryCode(request, regionMap))
+   console.log("urlCountryCode", countryCode)
   // const countryCode = "us";
   const urlHasCountryCode =
     countryCode && request.nextUrl.pathname.split("/")[1].includes(countryCode)
-
+  console.log("urlCountryCode", urlHasCountryCode)
   // check if one of the country codes is in the url
   if (
     urlHasCountryCode
@@ -122,16 +123,18 @@ export async function middleware(request: NextRequest) {
   // If no country code is set, we redirect to the relevant region.
   if (!urlHasCountryCode && countryCode) {
     redirectUrl = `${request.nextUrl.origin}/${countryCode}${redirectPath}${queryString}`
+    console.log("redirectUrl", redirectUrl)
     response = NextResponse.redirect(`${redirectUrl}`, 307)
   }
   console.log("redirectUrl", redirectUrl)
   // If a cart_id is in the params, we set it as a cookie and redirect to the address step.
   if (cartId && !checkoutStep) {
     redirectUrl = `${redirectUrl}&step=address`
+    console.log("redirectUrl", redirectUrl)
     response = NextResponse.redirect(`${redirectUrl}`, 307)
     response.cookies.set("_medusa_cart_id", cartId, { maxAge: 60 * 60 * 24 })
   }
-  console.log("redirectUrl", redirectUrl)
+  
 
   // Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
   // if (isOnboarding) {
