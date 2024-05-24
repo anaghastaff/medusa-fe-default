@@ -7,8 +7,6 @@ import ErrorMessage from "@modules/checkout/components/error-message"
 import { Cart } from "@medusajs/medusa"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, Tooltip, clx } from "@medusajs/ui"
-import { CardElement, PaymentElement } from "@stripe/react-stripe-js"
-import { StripeCardElementOptions } from "@stripe/stripe-js"
 
 import Divider from "@modules/common/components/divider"
 import Spinner from "@modules/common/icons/spinner"
@@ -16,7 +14,7 @@ import PaymentContainer from "@modules/checkout/components/payment-container"
 import { setPaymentMethod } from "@modules/checkout/actions"
 import { paymentInfoMap } from "@lib/constants"
 import { StripeContext } from "@modules/checkout/components/payment-wrapper"
-import type { StripePaymentElementOptions } from "@stripe/stripe-js"
+
 
 const Payment = ({
   cart,
@@ -148,7 +146,7 @@ const Payment = ({
                   Enter your card details:
                 </Text>
                 
-                <PaymentElement
+                <PaymentElement 
                   options={options}
                   onChange={(e)=>
                     
@@ -184,7 +182,7 @@ const Payment = ({
             <div className="flex items-start gap-x-1 w-full">
               <div className="flex flex-col w-1/3">
                 <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                  Payment method type
+                  Payment method
                 </Text>
                 <Text className="txt-medium text-ui-fg-subtle" data-testid="payment-method-summary">
                   {paymentInfoMap[cart.payment_session.provider_id]?.title ||

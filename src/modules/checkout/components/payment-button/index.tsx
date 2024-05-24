@@ -1,6 +1,6 @@
 "use client"
 
-import { Cart, PaymentSession } from "@medusajs/medusa"
+import { Cart, Order, PaymentSession, type Swap } from "@medusajs/medusa"
 import { Button } from "@medusajs/ui"
 import { OnApproveActions, OnApproveData } from "@paypal/paypal-js"
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js"
@@ -14,6 +14,9 @@ import type {
   StripeError,
   StripePaymentElementOptions,
 } from "@stripe/stripe-js"
+import { useRouter,usePathname } from "next/navigation" 
+
+
 
 type PaymentButtonProps = {
   cart: Omit<Cart, "refundable_amount" | "refunded_total">
@@ -61,6 +64,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   }
 }
 
+
+
 const StripePaymentButton = ({
   cart,
   notReady,
@@ -73,18 +78,30 @@ const StripePaymentButton = ({
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [cardComplete, setCardComplete] = useState(false)
+  const [cartComplete, setCartComplete] = useState<any>(null)
+  
+  
 
-  const onPaymentCompleted = async () => {
-    await placeOrder().catch(() => {
-      setErrorMessage("An error occurred, please try again.")
-      setSubmitting(false)
+   const onPaymentCompleted = async () => {
+    await placeOrder()
+    .then((cart)=>{
+      cart
+      if(!cart){
+        return null
+      }
+      setCartComplete(cart)
     })
-  }
+    .catch(() => {
+      setErrorMessage("An error occurred, please try again.");
+      setSubmitting(false);
+    });
+  };
 
   const stripe = useStripe()
   const elements = useElements()
   const card = elements?.getElement("card")
-
+  const pathname = usePathname();
+  const router = useRouter();
 
   const disabled = !stripe || !elements ? true : false
 
@@ -128,6 +145,7 @@ const StripePaymentButton = ({
     const {clientSecret} = await res.json();
     console.log("clientsecret", clientSecret)
     // Use the clientSecret and Elements instance to confirm the setup
+    
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       clientSecret,
@@ -137,6 +155,8 @@ const StripePaymentButton = ({
       // Uncomment below if you only want redirect for redirect-based payments
       redirect: "if_required",
     })
+    
+    
 
     if (error) {
       const pi = error.payment_intent
@@ -145,7 +165,9 @@ const StripePaymentButton = ({
         (pi && pi.status === "requires_capture") ||
         (pi && pi.status === "succeeded")
       ) {
-        onPaymentCompleted()
+        await onPaymentCompleted()
+       
+       
       }
 
       setErrorMessage(error.message || null)
@@ -156,13 +178,16 @@ const StripePaymentButton = ({
       (paymentIntent && paymentIntent.status === "requires_capture") ||
       paymentIntent.status === "succeeded"
     ) {
-      return onPaymentCompleted()
+     await onPaymentCompleted()       
     }
 
+   
     if (error) {
       handleError(error)
     }
   }
+
+  
 
   const options = {
     layout: "tabs" as "tabs"
@@ -267,9 +292,18 @@ const PayPalPaymentButton = ({
 const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
+  const [cartComplete, setCartComplete] = useState<any>(null)
+  const router = useRouter();
   const onPaymentCompleted = async () => {
-    await placeOrder().catch((err) => {
+    await placeOrder()
+    .then((cart)=> {
+      cart
+      if(!cart){
+        return null
+      }
+      setCartComplete(cart)
+    })
+    .catch((err) => {
       setErrorMessage(err.toString())
       setSubmitting(false)
     })
@@ -280,6 +314,15 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
 
     onPaymentCompleted()
   }
+
+  if(!cartComplete){
+    return null
+  }
+  if(cartComplete.type === "order")
+    {
+      const countryCode = cartComplete?.data.shipping_address.country_code;
+      router.push(`/${countryCode}/order/confirmed/${cartComplete?.data.id}`)
+    }
 
   return (
     <>

@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-
 import { retrieveOrder } from "@lib/data"
 import { LineItem, Order } from "@medusajs/medusa"
 import { enrichLineItems } from "@modules/cart/actions"

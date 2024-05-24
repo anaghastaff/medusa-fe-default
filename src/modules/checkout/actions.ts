@@ -19,7 +19,7 @@ export async function cartUpdate(data: StorePostCartsCartReq) {
   if (!cartId) return "No cartId cookie found"
 
   try {
-    await updateCart(cartId, data)
+    await updateCart(cartId, data) 
     revalidateTag("cart")
   } catch (error: any) {
     return error.toString()
@@ -172,7 +172,8 @@ export async function setShippingMethod(shippingMethodId: string) {
 
 export async function setPaymentMethod(providerId: string) {
   const cartId = cookies().get("_medusa_cart_id")?.value
-
+  console.log("Cart ID", cartId)
+  console.log("providerId", providerId)
   if (!cartId) throw new Error("No cartId cookie found")
 
   try {
@@ -193,7 +194,7 @@ export async function placeOrder() {
   let cart
 
   try {
-    cart = await completeCart(cartId)
+    cart = await completeCart(cartId) 
     revalidateTag("cart")
   } catch (error: any) {
     throw error
@@ -202,8 +203,8 @@ export async function placeOrder() {
   if (cart?.type === "order") {
     const countryCode = cart.data.shipping_address?.country_code?.toLowerCase()
     cookies().set("_medusa_cart_id", "", { maxAge: -1 })
-    redirect(`/${countryCode}/order/confirmed/${cart?.data.id}`)
-  }
-
+    redirect(`/${countryCode}/order/confirmed/${cart?.data.id}`);
+   }
+   
   return cart
 }
