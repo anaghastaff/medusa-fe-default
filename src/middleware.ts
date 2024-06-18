@@ -134,12 +134,12 @@ export async function middleware(request: NextRequest) {
     response = NextResponse.redirect(`${redirectUrl}`, 307)
     response.cookies.set("_medusa_cart_id", cartId, { maxAge: 60 * 60 * 24 })
   }
-  
 
-  // Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
-  // if (isOnboarding) {
-  //   response.cookies.set("_medusa_onboarding", "true", { maxAge: 60 * 60 * 24 })
-  // }
+ 
+  //Set a cookie to indicate that we're onboarding. This is used to show the onboarding flow.
+  if (isOnboarding) {
+    response.cookies.set("_medusa_onboarding", "true", { maxAge: 60 * 60 * 24 })
+  }
 
   return response
 }

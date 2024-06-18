@@ -39,11 +39,9 @@ export default function ProductActions({
   // initialize the option state
   useEffect(() => {
     const optionObj: Record<string, string> = {}
-
     for (const option of product.options || []) {
       Object.assign(optionObj, { [option.id]: undefined })
     }
-
     setOptions(optionObj)
   }, [product])
 
@@ -59,10 +57,8 @@ export default function ProductActions({
       for (const option of variant.options) {
         temp[option.option_id] = option.value
       }
-
       map[variant.id] = temp
     }
-
     return map
   }, [variants])
 
@@ -87,7 +83,7 @@ export default function ProductActions({
   }, [variants, variantRecord])
 
   // update the options when a variant is selected
-  const updateOptions = (update: Record<string, string>) => {
+  const updateOptions = (update: Record<string, string>) => { 
     setOptions({ ...options, ...update })
   }
 
@@ -131,6 +127,8 @@ export default function ProductActions({
                 return (
                   <div key={option.id}>
                     <OptionSelect
+                    variantRecord={variantRecord}
+                    variant={variant}
                       option={option}
                       current={options[option.id]}
                       updateOption={updateOptions}

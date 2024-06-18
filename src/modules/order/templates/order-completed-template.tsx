@@ -25,7 +25,7 @@ export default function OrderCompletedTemplate({
         {isOnboarding && <OnboardingCta orderId={order.id} />}
         <div className="flex flex-col gap-4 max-w-4xl h-full bg-white w-full py-10" data-testid="order-complete-container">
           <Heading
-            level="h1"
+            level="h1" 
             className="flex flex-col gap-y-3 text-ui-fg-base text-3xl mb-4"
           >
             <span>Thank you!</span>
@@ -44,4 +44,4 @@ export default function OrderCompletedTemplate({
       </div>
     </div>
   )
-}
+} 

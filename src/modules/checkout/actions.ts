@@ -13,6 +13,8 @@ import { GiftCard, StorePostCartsCartReq } from "@medusajs/medusa"
 import { revalidateTag } from "next/cache"
 import { redirect } from "next/navigation"
 
+
+
 export async function cartUpdate(data: StorePostCartsCartReq) {
   const cartId = cookies().get("_medusa_cart_id")?.value
 
@@ -198,13 +200,14 @@ export async function placeOrder() {
     revalidateTag("cart")
   } catch (error: any) {
     throw error
-  }
-
-  if (cart?.type === "order") {
-    const countryCode = cart.data.shipping_address?.country_code?.toLowerCase()
-    cookies().set("_medusa_cart_id", "", { maxAge: -1 })
-    redirect(`/${countryCode}/order/confirmed/${cart?.data.id}`);
-   }
+  }finally{
    
+  }
+   if (cart?.type === "order") {
+      const countryCode = cart.data.shipping_address?.country_code?.toLowerCase()
+      cookies().set("_medusa_cart_id", "", { maxAge: -1 })
+      console.log("Attempting redirect to this order ID",cart?.data.id )
+      redirect(`/${countryCode}/order/confirmed/${cart?.data.id}`);
+     }
   return cart
 }

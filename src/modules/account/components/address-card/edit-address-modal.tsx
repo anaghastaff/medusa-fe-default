@@ -57,7 +57,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
   }, [formState])
 
   const removeAddress = async () => {
-    setRemoving(true)
+    setRemoving(true) 
     await deleteCustomerShippingAddress(address.id)
     setRemoving(false)
   }

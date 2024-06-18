@@ -44,6 +44,16 @@ const nextConfig = withStoreConfig({
         hostname: "https://backend-stock-pjg4.onrender.com",
         
       },
+      {
+        protocol:"http",
+        hostname:"res.cloudinary.com",  
+        pathname:"/dxvvl4bpp/**",
+      },
+      {
+        protocol:"https",
+        hostname:"res.cloudinary.com",
+        pathname:"/dxvvl4bpp/**",
+      },
     ],
   },
 })
