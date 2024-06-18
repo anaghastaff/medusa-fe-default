@@ -24,6 +24,7 @@ type MobileActionsProps = {
   handleAddToCart: () => void
   isAdding?: boolean
   show: boolean
+  variantRecord: Record<string, Record<string, string>>
 }
 
 const MobileActions: React.FC<MobileActionsProps> = ({
@@ -36,6 +37,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
   handleAddToCart,
   isAdding,
   show,
+  variantRecord,
 }) => {
   const { state, open, close } = useToggleState()
 
@@ -166,12 +168,15 @@ const MobileActions: React.FC<MobileActionsProps> = ({
                         {(product.options || []).map((option) => {
                           return (
                             <div key={option.id}>
-                              <OptionSelect
-                                option={option}
-                                current={options[option.id]}
-                                updateOption={updateOptions}
-                                title={option.title}
-                              />
+                               <OptionSelect
+                    variantRecord={variantRecord}
+                    variant={variant}
+                      option={option}
+                      current={options[option.id]}
+                      updateOption={updateOptions}
+                      title={option.title}
+                      data-testid="product-options"
+                    />
                             </div>
                           )
                         })}

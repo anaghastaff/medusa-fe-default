@@ -169,6 +169,7 @@ export default function ProductActions({
           handleAddToCart={handleAddToCart}
           isAdding={isAdding}
           show={!inView}
+          variantRecord={variantRecord}
         />
       </div>
     </>
